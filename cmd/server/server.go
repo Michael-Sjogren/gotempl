@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Michael-Sjogren/gotempl/db"
-	"github.com/Michael-Sjogren/gotempl/handler"
-	"github.com/Michael-Sjogren/gotempl/model"
+	"github.com/Michael-Sjogren/gotempl/internal/db"
+	"github.com/Michael-Sjogren/gotempl/internal/handler"
+	"github.com/Michael-Sjogren/gotempl/internal/model"
 )
 
 func main() {

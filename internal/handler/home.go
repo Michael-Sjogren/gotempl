@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Michael-Sjogren/gotempl/views/pages"
+	"github.com/Michael-Sjogren/gotempl/internal/views/pages"
 )
 
 type HomeHandler struct{}

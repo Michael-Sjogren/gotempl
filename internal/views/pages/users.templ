@@ -1,0 +1,10 @@
+package pages
+
+import "github.com/Michael-Sjogren/gotempl/internal/mytypes"
+import "github.com/Michael-Sjogren/gotempl/internal/views/components"
+
+templ UsersPage (users [] *mytypes.User) {
+	@BaseLayout("Users") {
+		@components.UsersList(users)
+	}
+}

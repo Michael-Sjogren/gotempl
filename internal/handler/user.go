@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Michael-Sjogren/gotempl/mytypes"
-	"github.com/Michael-Sjogren/gotempl/views/pages"
+	"github.com/Michael-Sjogren/gotempl/internal/mytypes"
+	"github.com/Michael-Sjogren/gotempl/internal/views/pages"
 )
 
 type UserHandler struct{}
