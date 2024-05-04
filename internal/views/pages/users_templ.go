@@ -10,10 +10,10 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/Michael-Sjogren/gotempl/internal/mytypes"
 import "github.com/Michael-Sjogren/gotempl/internal/views/components"
+import "github.com/Michael-Sjogren/gotempl/internal/model"
 
-func UsersPage(users []*mytypes.User) templ.Component {
+func UsersPage(users []model.User) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {

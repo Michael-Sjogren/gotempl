@@ -33,7 +33,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	userModel := model.UserModel{Con: con}
+	userModel := model.NewUserRepo(con)
 	_, err = userModel.CreateUser(model.User{
 		Username: "Michael",
 		Access:   -1,
@@ -46,7 +46,7 @@ func main() {
 	defer con.Close()
 
 	home := handler.HomeHandler{}
-	users := handler.UserHandler{}
+	users := handler.UserHandler{UserModel: &userModel}
 	// Replace "." with the actual path of the directory you want to expose.
 	directoryPath := "./static"
 
@@ -57,10 +57,10 @@ func main() {
 		return
 	}
 	// handle main page routes
-	mux.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir(directoryPath))))
-	mux.HandleFunc("/", home.HandlerHomePageView)
-	mux.HandleFunc("/users", users.HandleUsersPageView)
-	mux.HandleFunc("/login", users.HandleUsersPageView)
+	mux.Handle("GET /static/*", http.StripPrefix("/static/", http.FileServer(http.Dir(directoryPath))))
+	mux.HandleFunc("GET /", home.HandlerHomePageView)
+	mux.HandleFunc("GET /users", users.HandleUsersPageView)
+	mux.HandleFunc("GET /login", users.HandleUsersPageView)
 
 	// htmx handlers
 

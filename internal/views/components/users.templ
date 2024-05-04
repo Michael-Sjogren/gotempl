@@ -1,12 +1,28 @@
 package components
-import "github.com/Michael-Sjogren/gotempl/internal/mytypes"
+import "github.com/Michael-Sjogren/gotempl/internal/model"
+import "fmt"
 
-templ UsersList(users [] *mytypes.User ) {
-    <ul>
-        for _,user := range users {
-        <li> {user.Username} </li>
-        }
-    </ul>
+templ UsersList(users [] model.User ) {
+    <table class="table-auto border-collapse">
+        <thead>
+            <tr>
+               <th class="p-5 border border-slate-500">#</th>
+               <th class="p-5 border border-slate-500">Name</th>
+               <th class="p-5 border border-slate-500">Created at</th> 
+               <th class="p-5 border border-slate-500">Access</th> 
+            </tr>
+        </thead>
+        <tbody>
+            for _,user := range users {
+            <tr>
+                <td class="p-5 border border-slate-100">{fmt.Sprintf("%d",user.Id)}</td>
+                <td class="p-5 border border-slate-100">{user.Username} </td>
+                <td class="p-5 border border-slate-100">{user.CreatedAt} </td>
+                <td class="p-5 border border-slate-100">{fmt.Sprintf("%d",user.Access)} </td>
+            </tr>
+            }
+        </tbody>
+    </table>
 }
 
 

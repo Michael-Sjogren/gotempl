@@ -7,8 +7,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type UserModel struct {
-	Con *sql.DB
+func NewUserRepo(con *sql.DB) UserRepo {
+	return UserRepo{
+		con: con,
+	}
+}
+
+type UserRepo struct {
+	con *sql.DB
 }
 
 type User struct {
@@ -17,8 +23,6 @@ type User struct {
 	Access    int
 	CreatedAt string
 }
-
-const ()
 
 func CheckPassword(hash []byte, password []byte) bool {
 	if err := bcrypt.CompareHashAndPassword(hash, password); err != nil {
@@ -31,8 +35,8 @@ func GeneratePassword(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 }
 
-func (m *UserModel) CreateUser(newUser User, passwordHash []byte) (User, error) {
-	res, err := m.Con.Exec(`
+func (m *UserRepo) CreateUser(newUser User, passwordHash []byte) (User, error) {
+	res, err := m.con.Exec(`
 		INSERT INTO users (username,password_hash,access) VALUES (?,?,?);
 	`, newUser.Username, passwordHash, newUser.Access)
 
@@ -47,4 +51,30 @@ func (m *UserModel) CreateUser(newUser User, passwordHash []byte) (User, error) 
 	}
 	newUser.Id = id
 	return newUser, nil
+}
+
+func (h *UserRepo) GetAll() ([]User, error) {
+	var users []User
+	rows, err := h.con.Query(`SELECT id,username,access,created_at FROM users;`)
+
+	if err != nil {
+		return users, err
+	}
+
+	for rows.Next() {
+		var user User
+		err = rows.Scan(
+			&user.Id,
+			&user.Username,
+			&user.Access,
+			&user.CreatedAt,
+		)
+
+		if err != nil {
+			return users, err
+		}
+
+		users = append(users, user)
+	}
+	return users, nil
 }

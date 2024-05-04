@@ -7,7 +7,3 @@ type MenuLink struct {
 	Name   string
 	Active bool
 }
-
-type User struct {
-	Username string
-}

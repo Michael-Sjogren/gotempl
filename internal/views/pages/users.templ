@@ -1,9 +1,9 @@
 package pages
 
-import "github.com/Michael-Sjogren/gotempl/internal/mytypes"
 import "github.com/Michael-Sjogren/gotempl/internal/views/components"
+import "github.com/Michael-Sjogren/gotempl/internal/model"
 
-templ UsersPage (users [] *mytypes.User) {
+templ UsersPage (users [] model.User) {
 	@BaseLayout("Users") {
 		@components.UsersList(users)
 	}
