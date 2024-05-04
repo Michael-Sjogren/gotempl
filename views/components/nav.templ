@@ -1,0 +1,19 @@
+package components
+
+import "github.com/Michael-Sjogren/gotempl/mytypes"
+
+templ Navigation(menulinks []mytypes.MenuLink) {
+	<nav>
+		<ul>
+			for _,link := range menulinks {
+				<li class="bg-sky-500 hover:bg-sky-700">
+					if link.Active {
+						<a class="active" href={link.Url}>{ link.Name }</a>
+					} else {
+						<a href={link.Url}>{ link.Name }</a>
+					}
+				</li>
+			}
+		</ul>
+	</nav>
+}

@@ -1,0 +1,29 @@
+package pages
+
+import "github.com/Michael-Sjogren/gotempl/views/components"
+import "github.com/Michael-Sjogren/gotempl/mytypes"
+
+templ BaseLayout(title string) {
+	<!DOCTYPE html >
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<link rel="stylesheet" href="static/css/main.css" />
+			<script src="static/js/htmx.min.js"></script>
+			<title>{ title }</title>
+		</head>
+		<body>
+			<header>
+				@components.Navigation([]mytypes.MenuLink{
+					{Url: "/", Name: "Home"},
+					{Url: "/users", Name: "Users"},
+					{Url: "/login", Name: "Login"},
+				})
+			</header>
+			<main>
+				{ children... }
+			</main>
+		</body>
+	</html>
+}

@@ -1,0 +1,12 @@
+package components
+import "github.com/Michael-Sjogren/gotempl/mytypes"
+
+templ UsersList(users [] *mytypes.User ) {
+    <ul>
+        for _,user := range users {
+        <li> {user.Username} </li>
+        }
+    </ul>
+}
+
+
