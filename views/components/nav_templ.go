@@ -25,17 +25,17 @@ func Navigation(menulinks []mytypes.MenuLink) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><ul>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<nav><ul class=\"inline-flex gap-5 p-5\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, link := range menulinks {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li class=\"bg-sky-500 hover:bg-sky-700\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if link.Active {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"active\" href=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"font-normal text-lg text-sky-400\" href=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -51,7 +51,7 @@ func Navigation(menulinks []mytypes.MenuLink) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(link.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/nav.templ`, Line: 11, Col: 51}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/nav.templ`, Line: 11, Col: 77}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -62,7 +62,7 @@ func Navigation(menulinks []mytypes.MenuLink) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a href=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a class=\"font-normal text-lg text-sky-600\" href=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -78,7 +78,7 @@ func Navigation(menulinks []mytypes.MenuLink) templ.Component {
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(link.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/nav.templ`, Line: 13, Col: 36}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/nav.templ`, Line: 13, Col: 77}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {

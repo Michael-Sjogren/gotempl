@@ -4,13 +4,13 @@ import "github.com/Michael-Sjogren/gotempl/mytypes"
 
 templ Navigation(menulinks []mytypes.MenuLink) {
 	<nav>
-		<ul>
+		<ul class="inline-flex gap-5 p-5">
 			for _,link := range menulinks {
-				<li class="bg-sky-500 hover:bg-sky-700">
+				<li>
 					if link.Active {
-						<a class="active" href={link.Url}>{ link.Name }</a>
+						<a class="font-normal text-lg text-sky-400" href={link.Url}>{ link.Name }</a>
 					} else {
-						<a href={link.Url}>{ link.Name }</a>
+						<a class="font-normal text-lg text-sky-600" href={link.Url}>{ link.Name }</a>
 					}
 				</li>
 			}

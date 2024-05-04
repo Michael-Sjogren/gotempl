@@ -5,7 +5,7 @@ build:
 	cp -r assets/js ./dist/static
 
 	go build -o ./dist/server cmd/server/server.go
-	tailwind -i assets/css/input.css -o dist/static/css/main.css
+	tailwind -i assets/css/input.css -o dist/static/css/main.css --minify
 
 generate:
 	find . -type f -name "*.templ" | entr -r templ generate
