@@ -6,3 +6,4 @@
 - entr:     hot reload on file changes
 - tailwind css:     premade css classes
 - make:     build process
+- sqlite3:  database
