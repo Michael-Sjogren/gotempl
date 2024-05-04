@@ -1,2 +1,4 @@
 dist
 *.db
+# generated templ files
+*_templ.go
