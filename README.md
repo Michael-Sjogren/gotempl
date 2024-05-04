@@ -1,6 +1,6 @@
 # Tools
 
-- golang:   http mux
+- golang v1.22:   http mux
 - js:       htmx.js
 - golang:   templ
 - entr:     hot reload on file changes
