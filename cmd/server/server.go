@@ -47,10 +47,7 @@ func main() {
 
 	home := handler.HomeHandler{}
 	users := handler.UserHandler{UserModel: &userModel}
-	// Replace "." with the actual path of the directory you want to expose.
 	directoryPath := "./static"
-
-	// Check if the directory exists
 	_, err = os.Stat(directoryPath)
 	if os.IsNotExist(err) {
 		fmt.Printf("Directory '%s' not found.\n", directoryPath)
@@ -60,9 +57,13 @@ func main() {
 	mux.Handle("GET /static/*", http.StripPrefix("/static/", http.FileServer(http.Dir(directoryPath))))
 	mux.HandleFunc("GET /", home.HandlerHomePageView)
 	mux.HandleFunc("GET /users", users.HandleUsersPageView)
-	mux.HandleFunc("GET /login", users.HandleUsersPageView)
+
+	mux.HandleFunc("GET /login", users.HandleLoginView)
+	mux.HandleFunc("POST /login", users.HandleLoginView)
 
 	// htmx handlers
+	mux.HandleFunc("POST /hx/users", users.HandleCreateUser)
+	mux.HandleFunc("GET /hx/users", users.HandleUserFormView)
 
 	ip := "127.0.0.1:3333"
 	log.Printf("starting server on: http://%s\n", ip)

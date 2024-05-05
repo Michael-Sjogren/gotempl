@@ -1,0 +1,17 @@
+package components
+
+templ LoginForm(username string) {
+    <form class="grid gap-6">
+        <div class="flex gap-24 items-stretch">
+            <label class="block" for="username">Username</label>
+            <input class=" p-1 rounded-lg border-2 border-orange-200" type="text" id="username" value={username} placeholder="name" />
+        </div>
+        <div class="flex gap-24 items-stretch">
+            <label for="password">Password</label>
+            <input class=" p-1 rounded-lg border-2 border-orange-200" type="text" id="password" />
+        </div>
+        <div class="flex items-end">
+            <button type="button" class="text-lg bg-orange-400 hover:bg-orange-900 text-slate-50 py-2 px-5 rounded-lg"  >Login</button>
+        </div>
+    </form>
+}

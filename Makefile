@@ -8,7 +8,7 @@ build:
 	tailwind -i assets/css/input.css -o dist/static/css/main.css --minify
 
 generate:
-	find . -type f -name "*.templ" | entr -r templ generate
+	find . -type f -name "*.templ" | entr templ generate
 
 run:build
 	cd dist && ./server

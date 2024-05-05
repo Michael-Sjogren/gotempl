@@ -2,27 +2,68 @@ package components
 import "github.com/Michael-Sjogren/gotempl/internal/model"
 import "fmt"
 
-templ UsersList(users [] model.User ) {
-    <table class="table-auto border-collapse">
-        <thead>
-            <tr>
-               <th class="p-5 border border-slate-500">#</th>
-               <th class="p-5 border border-slate-500">Name</th>
-               <th class="p-5 border border-slate-500">Created at</th> 
-               <th class="p-5 border border-slate-500">Access</th> 
-            </tr>
-        </thead>
-        <tbody>
-            for _,user := range users {
-            <tr>
-                <td class="p-5 border border-slate-100">{fmt.Sprintf("%d",user.Id)}</td>
-                <td class="p-5 border border-slate-100">{user.Username} </td>
-                <td class="p-5 border border-slate-100">{user.CreatedAt} </td>
-                <td class="p-5 border border-slate-100">{fmt.Sprintf("%d",user.Access)} </td>
-            </tr>
+
+templ CreateUserForm(username string, access int, errorList []string) {
+    <form hx-post="/hx/users" hx-trigger="submit" hx-swap="outerHTML" id="create-user-form" class="grid gap-5">
+        <div class="grid gap-5">
+            <label for="username">Username</label>
+            <input class="p-2 border border-slate-100 rounded-md" name="username" id="username" type="text" value={username} />
+        </div>
+        <div class="flex gap-10">
+            <div class="grid gap-5">
+                <label for="password">Password</label>
+                <input class="p-2 border border-slate-100 rounded-md" name="password" id="password" type="password"/>
+            </div>
+            <div class="grid gap-5">
+                <label for="cofirm-password">Confirm Password</label>
+                <input class="p-2 border border-slate-100 rounded-md" name="cofirm-password" id="cofirm-password" type="cofirm-password"/>
+            </div>
+        </div>
+        <div class="grid gap-5">
+            <label for="access">Access</label>
+            <input  class="p-2 border border-slate-100 rounded-md"min="0" max="255" type="number" name="access" id="access" value={fmt.Sprintf("%d",access)}/>
+        </div>
+
+        <div class="flex gap-5">
+            <button type="submit" hx-include="#create-user-form" class="flex gap-2 text-green-900">Add         <svg aria-label="plus icon with a circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg></button>
+        </div>
+        <ul class="text-sm text-red-600 list-inside flex-row gap-5">
+            for _,error := range errorList {
+                <li>{error}</li>
             }
-        </tbody>
-    </table>
+        </ul>
+    </form>
 }
 
 
+templ UsersList(users [] model.User ) {
+    <div class="grid gap-y-14">
+    <section class="max-w-max bg-slate-100 border border-slate-500 p-10" >
+        @CreateUserForm("",0,[]string{})
+    </section>
+    <div>
+        <table class="table-auto border-collapse">
+            <thead>
+                <tr>
+                <th class="p-5 border border-slate-500">#</th>
+                <th class="p-5 border border-slate-500">Name</th>
+                <th class="p-5 border border-slate-500">Created at</th> 
+                <th class="p-5 border border-slate-500">Access</th> 
+                </tr>
+            </thead>
+            <tbody>
+                for _,user := range users {
+                <tr>
+                    <td class="p-5 border border-slate-100">{fmt.Sprintf("%d",user.Id)}</td>
+                    <td class="p-5 border border-slate-100">{user.Username} </td>
+                    <td class="p-5 border border-slate-100">{user.CreatedAt} </td>
+                    <td class="p-5 border border-slate-100">{fmt.Sprintf("%d",user.Access)} </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    </div>
+}

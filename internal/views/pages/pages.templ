@@ -8,3 +8,18 @@ templ UsersPage (users [] model.User) {
 		@components.UsersList(users)
 	}
 }
+
+
+templ LoginPage () {
+	@BaseLayout("Login") {
+		@components.LoginForm("")
+	}
+}
+
+templ HomePage() {
+	@BaseLayout("Home") {
+		<div>
+			<h1>My homepage</h1>
+		</div>
+	}
+}
