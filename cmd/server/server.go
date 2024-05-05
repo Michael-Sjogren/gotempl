@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/Michael-Sjogren/gotempl/internal/db"
 	"github.com/Michael-Sjogren/gotempl/internal/handler"
 	"github.com/Michael-Sjogren/gotempl/internal/model"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func main() {
@@ -17,8 +18,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println(dir)
-	mux := http.NewServeMux()
 	con, err := db.Connect(dir + "/mydb.db")
 	if err != nil {
 		log.Fatal(err)
@@ -45,6 +44,9 @@ func main() {
 
 	defer con.Close()
 
+	ip := "127.0.0.1:3333"
+	app := fiber.New()
+
 	home := handler.HomeHandler{}
 	users := handler.UserHandler{UserModel: &userModel}
 	directoryPath := "./static"
@@ -53,21 +55,23 @@ func main() {
 		fmt.Printf("Directory '%s' not found.\n", directoryPath)
 		return
 	}
-	// handle main page routes
-	mux.Handle("GET /static/*", http.StripPrefix("/static/", http.FileServer(http.Dir(directoryPath))))
-	mux.HandleFunc("GET /", home.HandlerHomePageView)
-	mux.HandleFunc("GET /users", users.HandleUsersPageView)
 
-	mux.HandleFunc("GET /login", users.HandleLoginView)
-	mux.HandleFunc("POST /login", users.HandleLoginView)
+	hxRouter := app.Group("/hx")
+	app.Use(logger.New())
+	app.Static("/static/", directoryPath)
+	app.Get("/", home.HandlerHomePageView)
+	app.Get("/users", users.HandleUsersPageView)
+
+	app.Get("/login", users.HandleLoginView)
+	app.Get("/login", users.HandleLoginView)
 
 	// htmx handlers
-	mux.HandleFunc("POST /hx/users", users.HandleCreateUser)
-	mux.HandleFunc("GET /hx/users", users.HandleUserFormView)
+	hxRouter.Post("/users", users.HandleCreateUser)
+	hxRouter.Get("/users", users.HandleUserFormView)
 
-	ip := "127.0.0.1:3333"
 	log.Printf("starting server on: http://%s\n", ip)
-	if err := http.ListenAndServe(ip, mux); err != nil {
+	if err := app.Listen(ip); err != nil {
 		log.Fatal(err)
 	}
+
 }

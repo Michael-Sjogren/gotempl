@@ -32,7 +32,7 @@ func CheckPassword(hash []byte, password []byte) bool {
 }
 
 func GeneratePassword(password string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
+	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost+bcrypt.MinCost)
 }
 
 func (m *UserRepo) CreateUser(newUser User, passwordHash []byte) (User, error) {

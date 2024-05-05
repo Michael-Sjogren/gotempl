@@ -2,51 +2,40 @@ package handler
 
 import (
 	"log"
-	"net/http"
 	"slices"
 	"strconv"
 
 	"github.com/Michael-Sjogren/gotempl/internal/model"
 	"github.com/Michael-Sjogren/gotempl/internal/views/components"
 	"github.com/Michael-Sjogren/gotempl/internal/views/pages"
+	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
 	UserModel *model.UserRepo
 }
 
-func (h *UserHandler) HandleUsersPageView(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) HandleUsersPageView(c *fiber.Ctx) error {
 	users, err := h.UserModel.GetAll()
 	if err != nil {
 		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		return err
 	}
 
-	err = pages.UsersPage(users).Render(r.Context(), w)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return Render(c, pages.UsersPage(users))
 }
 
-func (h *UserHandler) HandleLoginView(w http.ResponseWriter, r *http.Request) {
-	if err := pages.LoginPage().Render(r.Context(), w); err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-	}
+func (h *UserHandler) HandleLoginView(c *fiber.Ctx) error {
+	return Render(c, pages.LoginPage())
 }
 
-func (h *UserHandler) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 	var newUser model.User
-	if err := r.ParseForm(); err != nil {
-		log.Panicln(err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	username := r.Form.Get("username")
-	password := r.Form.Get("password")
-	confirmPassword := r.Form.Get("confirm-password")
-	access := r.Form.Get("access")
+
+	username := c.FormValue("username")
+	password := c.FormValue("password")
+	confirmPassword := c.FormValue("confirm-password")
+	access := c.FormValue("access")
 
 	errorList := []string{}
 
@@ -91,16 +80,9 @@ func (h *UserHandler) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println(errorList)
-
-	err = components.CreateUserForm("", 0, errorList).Render(r.Context(), w)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return Render(c, components.CreateUserForm("", 0, errorList))
 }
 
-func (h *UserHandler) HandleUserFormView(w http.ResponseWriter, r *http.Request) {
-	err := components.CreateUserForm("", 0, make([]string, 0)).Render(r.Context(), w)
-	if err != nil {
-		log.Fatal(err)
-	}
+func (h *UserHandler) HandleUserFormView(c *fiber.Ctx) error {
+	return Render(c, components.CreateUserForm("", 0, make([]string, 0)))
 }
