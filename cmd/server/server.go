@@ -68,6 +68,7 @@ func main() {
 	// htmx handlers
 	hxRouter.Post("/users", users.HandleCreateUser)
 	hxRouter.Get("/users", users.HandleUserFormView)
+	hxRouter.Delete("/users/:id", users.HandleDeleteUser)
 
 	log.Printf("starting server on: http://%s\n", ip)
 	if err := app.Listen(ip); err != nil {

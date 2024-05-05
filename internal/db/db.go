@@ -17,7 +17,7 @@ func InitializeDB(con *sql.DB) error {
 	(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		username TEXT NOT NULL UNIQUE,
-		password_hash BLOB NOT NULL,
+		password_hash TEXT NOT NULL,
 		created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		access INTEGER NOT NULL DEFAULT 0
 	) STRICT;`)

@@ -2,7 +2,10 @@ package model
 
 import (
 	"database/sql"
-	"log"
+	"errors"
+	"fmt"
+
+	"github.com/gofiber/fiber/v2/log"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -38,7 +41,7 @@ func GeneratePassword(password string) ([]byte, error) {
 func (m *UserRepo) CreateUser(newUser User, passwordHash []byte) (User, error) {
 	res, err := m.con.Exec(`
 		INSERT INTO users (username,password_hash,access) VALUES (?,?,?);
-	`, newUser.Username, passwordHash, newUser.Access)
+	`, newUser.Username, string(passwordHash), newUser.Access)
 
 	if err != nil {
 		return newUser, err
@@ -77,4 +80,36 @@ func (h *UserRepo) GetAll() ([]User, error) {
 		users = append(users, user)
 	}
 	return users, nil
+}
+
+func (h *UserRepo) Delete(userId int) error {
+	log.Info("Deleting user....", userId)
+	tx, err := h.con.Begin()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	res, err := tx.Exec("DELETE FROM users WHERE id = ?", userId)
+	if err != nil {
+		log.Error(err)
+		return tx.Rollback()
+	}
+
+	n, err := res.RowsAffected()
+
+	if err != nil {
+		log.Error(err)
+		tx.Rollback()
+		return err
+	}
+
+	if n != 1 {
+		log.Error("rows affected != 1")
+		tx.Rollback()
+		return errors.New("Failed to delete row: rows affected: " + fmt.Sprintf("%d", n))
+
+	}
+	log.Info("Deleted user", userId)
+	return tx.Commit()
 }

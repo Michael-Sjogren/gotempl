@@ -29,6 +29,19 @@ func (h *UserHandler) HandleLoginView(c *fiber.Ctx) error {
 	return Render(c, pages.LoginPage())
 }
 
+func (h *UserHandler) HandleDeleteUser(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id", -1)
+
+	if err != nil {
+		c.Status(400)
+		return err
+	}
+	err = h.UserModel.Delete(id)
+
+	log.Println(err)
+	return err
+}
+
 func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 	var newUser model.User
 
@@ -42,6 +55,8 @@ func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 	if len(username) == 0 {
 		errorList = append(errorList, "Username must be defined")
 	}
+	newUser.Username = username
+
 	if slices.Equal([]byte(password), []byte(confirmPassword)) {
 		errorList = append(errorList, "confirm password and password was not equal")
 	}
@@ -51,8 +66,10 @@ func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 	}
 
 	var err error
-	if newUser.Access, err = strconv.Atoi(access); err != nil {
-		errorList = append(errorList, "Invalid access value, must be a numeric value.")
+	if n, err := strconv.Atoi(access); err == nil {
+		newUser.Access = n
+	} else {
+		errorList = append(errorList, "Invalid access value, must be a numeric value "+err.Error())
 	}
 
 	hash, err := model.GeneratePassword(password)
@@ -63,10 +80,7 @@ func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 
 	if !hasErrors {
 
-		newUser, err = h.UserModel.CreateUser(model.User{
-			Username: username,
-			Access:   0,
-		}, hash)
+		newUser, err = h.UserModel.CreateUser(newUser, hash)
 
 		if err != nil {
 			errorList = append(errorList, err.Error())

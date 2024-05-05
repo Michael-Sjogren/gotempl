@@ -1,9 +1,9 @@
 build:
-	rm -rf dist
+	rm -f dist/server
+	rm  -rf dist/static
 	mkdir -p ./dist/static/css
 	mkdir -p ./dist/static/js
 	cp -r assets/js ./dist/static
-
 	go build -o ./dist/server cmd/server/server.go
 	tailwind -i assets/css/input.css -o dist/static/css/main.css --minify
 
