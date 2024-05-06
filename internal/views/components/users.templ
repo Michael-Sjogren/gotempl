@@ -74,7 +74,7 @@ templ UsersList(users [] model.User ) {
                     <td class="p-5 border border-slate-100">{user.Username} </td>
                     <td class="p-5 border border-slate-100">{user.CreatedAt} </td>
                     <td class="p-5 border border-slate-100">{fmt.Sprintf("%d",user.Access)} </td>
-                    <td class="p-2 flex gap-14 justify-between">
+                    <td class="p-5 flex gap-14 justify-between border border-slate-100">
                         <button class="text-blue-700 p-2 flex gap-2 hover:text-blue-600 transition-colors">
                             <span class="sr-only">Edit</span>
                             <span>

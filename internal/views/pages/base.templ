@@ -13,7 +13,7 @@ templ BaseLayout(title string) {
 			<script src="static/js/htmx.min.js"></script>
 			<title>{ title }</title>
 		</head>
-		<body>
+		<body class="min-h-screen">
 			<header>
 				@components.Navigation([]mytypes.MenuLink{
 					{Url: "/", Name: "Home"},
@@ -21,7 +21,7 @@ templ BaseLayout(title string) {
 					{Url: "/login", Name: "Login"},
 				})
 			</header>
-			<main class="p-5">
+			<main class="p-5 bg-gray-50 h-full">
 				{ children... }
 			</main>
 		</body>

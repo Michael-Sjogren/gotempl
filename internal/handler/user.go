@@ -6,13 +6,15 @@ import (
 	"strconv"
 
 	"github.com/Michael-Sjogren/gotempl/internal/model"
+	"github.com/Michael-Sjogren/gotempl/internal/session"
 	"github.com/Michael-Sjogren/gotempl/internal/views/components"
 	"github.com/Michael-Sjogren/gotempl/internal/views/pages"
 	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
-	UserModel *model.UserRepo
+	UserModel      *model.UserRepo
+	SessionManager *session.SessionManager
 }
 
 func (h *UserHandler) HandleUsersPageView(c *fiber.Ctx) error {
@@ -23,6 +25,27 @@ func (h *UserHandler) HandleUsersPageView(c *fiber.Ctx) error {
 	}
 
 	return Render(c, pages.UsersPage(users))
+}
+
+func (h *UserHandler) HandleLogin(c *fiber.Ctx) error {
+	username := c.FormValue("username")
+	password := c.FormValue("password")
+	errorList := []string{}
+
+	if len(username) == 0 || len(password) == 0 {
+		errorList = append(errorList, "Username or password was not set")
+	}
+	user, err := h.UserModel.LoginUser(username, password)
+
+	if err != nil {
+		errorList = append(errorList, err.Error())
+	}
+
+	if len(errorList) == 0 {
+		_, _ = h.SessionManager.HandleCreateSession(c, user.Id)
+		log.Println("created session")
+	}
+	return Render(c, components.LoginForm(errorList))
 }
 
 func (h *UserHandler) HandleLoginView(c *fiber.Ctx) error {

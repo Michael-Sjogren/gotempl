@@ -27,7 +27,7 @@ type User struct {
 	CreatedAt string
 }
 
-func CheckPassword(hash []byte, password []byte) bool {
+func checkPassword(hash []byte, password []byte) bool {
 	if err := bcrypt.CompareHashAndPassword(hash, password); err != nil {
 		return false
 	}
@@ -36,6 +36,27 @@ func CheckPassword(hash []byte, password []byte) bool {
 
 func GeneratePassword(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost+bcrypt.MinCost)
+}
+
+func (m *UserRepo) LoginUser(username string, password string) (User, error) {
+	var user User
+	row := m.con.QueryRow("SELECT id,username,access,created_at,password_hash FROM users WHERE username = ?;", username)
+	var hash string
+	if err := row.Scan(
+		&user.Id,
+		&user.Username,
+		&user.Access,
+		&user.CreatedAt,
+		&hash,
+	); err != nil {
+		return user, err
+	}
+
+	if !checkPassword([]byte(hash), []byte(password)) {
+		return user, errors.New("wrong password")
+	}
+
+	return user, nil
 }
 
 func (m *UserRepo) CreateUser(newUser User, passwordHash []byte) (User, error) {

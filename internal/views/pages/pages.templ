@@ -12,7 +12,7 @@ templ UsersPage (users [] model.User) {
 
 templ LoginPage () {
 	@BaseLayout("Login") {
-		@components.LoginForm("")
+		@components.LoginForm([]string{})
 	}
 }
 

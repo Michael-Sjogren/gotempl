@@ -3,8 +3,8 @@ package components
 import "github.com/Michael-Sjogren/gotempl/internal/mytypes"
 
 templ Navigation(menulinks []mytypes.MenuLink) {
-	<nav>
-		<ul class="inline-flex gap-5 p-5">
+	<nav class="w-full">
+		<ul class="flex gap-15 p-5 justify-evenly shadow-sm">
 			for _,link := range menulinks {
 				<li>
 					if link.Active {
