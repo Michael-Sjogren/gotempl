@@ -4,7 +4,7 @@ import "fmt"
 
 
 templ CreateUserForm(username string, access int, errorList []string) {
-    <form hx-post="/hx/users" hx-trigger="submit" hx-swap="outerHTML" id="create-user-form" class="grid gap-5">
+    <form id="create-user-form" class="grid gap-5">
         <div class="grid gap-5">
             <label for="username">Username</label>
             <input class="p-2 border border-slate-100 rounded-md" name="username" id="username" type="text" />
@@ -25,7 +25,12 @@ templ CreateUserForm(username string, access int, errorList []string) {
         </div>
 
         <div class="flex gap-5">
-            <button type="submit" hx-include="#create-user-form" class="flex gap-2 text-green-900">Add         <svg aria-label="plus icon with a circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <button onclick="toggleDialog(false)" class="flex gap-2">Close 
+                <svg aria-label="close icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+            </button>
+            <button hx-post="/hx/users" hx-trigger="click" hx-swap="outerHTML" hx-target="#create-user-form" hx-include="#create-user-form" class="flex gap-2 text-green-900">Add         <svg aria-label="plus icon with a circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg></button>
         </div>
@@ -40,8 +45,16 @@ templ CreateUserForm(username string, access int, errorList []string) {
 
 templ UsersList(users [] model.User ) {
     <div class="grid gap-y-14">
-    <section class="max-w-max bg-slate-100 border border-slate-500 p-10" >
-        @CreateUserForm("",0,[]string{})
+    <section class="w-full" >
+        <div class="flex gap-20 justify-end">
+            <button id="new-user-modal-btn" class="flex gap-2 text-green-900">New <svg aria-label="plus icon with a circle" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+            </button>
+        </div>
+        <dialog id="create-dialog" class="p-10 shadow-sm">
+            @CreateUserForm("",0,[]string{})
+        </dialog>
     </section>
     <div>
         <table class="table-auto border-collapse w-full">
@@ -86,4 +99,17 @@ templ UsersList(users [] model.User ) {
         </table>
     </div>
     </div>
+
+    <script>
+        const modalBtn = document.getElementById('new-user-modal-btn')
+        const modal = document.getElementById('create-dialog')
+        function toggleDialog(show=true) {
+            if (show) {
+                modal.showModal()
+            }  else {
+                modal.close()
+            }
+        }
+        modalBtn.onclick = e => toggleDialog(true)
+    </script>
 }
