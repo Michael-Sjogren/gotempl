@@ -1,4 +1,4 @@
-package session
+package middleware
 
 import (
 	"log"
@@ -26,7 +26,7 @@ func NewSessionManager() *SessionManager {
 
 const USER_ID = "USER_ID"
 
-func (manager *SessionManager) HandleCreateSession(c *fiber.Ctx, userId int64) (*session.Session, error) {
+func (manager *SessionManager) HandleGetCreateSession(c *fiber.Ctx, userId int64) (*session.Session, error) {
 	sess, err := manager.store.Get(c)
 	if err != nil {
 		return nil, err
@@ -43,4 +43,17 @@ func (manager *SessionManager) HandleCreateSession(c *fiber.Ctx, userId int64) (
 	}
 
 	return sess, nil
+}
+
+func (manager *SessionManager) GetUserIdBySession(c *fiber.Ctx) int64 {
+	sess, err := manager.store.Get(c)
+	if err != nil {
+		return -1
+	}
+
+	if sess.Fresh() {
+		return -1
+	}
+
+	return sess.Get(USER_ID).(int64)
 }

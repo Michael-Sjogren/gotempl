@@ -7,8 +7,8 @@ import (
 
 	"github.com/Michael-Sjogren/gotempl/internal/db"
 	"github.com/Michael-Sjogren/gotempl/internal/handler"
+	"github.com/Michael-Sjogren/gotempl/internal/middleware"
 	"github.com/Michael-Sjogren/gotempl/internal/model"
-	"github.com/Michael-Sjogren/gotempl/internal/session"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	userModel := model.NewUserRepo(con)
-	sessionManager := session.NewSessionManager()
+	sessionManager := middleware.NewSessionManager()
 	_, err = userModel.CreateUser(model.User{
 		Username: "Michael",
 		Access:   -1,
@@ -60,7 +60,20 @@ func main() {
 
 	hxRouter := app.Group("/hx")
 	app.Use(logger.New())
+
 	app.Static("/static/", directoryPath)
+	app.Use("/", func(c *fiber.Ctx) error {
+		sess := c.Cookies("session_id")
+
+		if len(sess) == 0 {
+			log.Println("no session id found")
+		} else {
+
+			userId := sessionManager.GetUserIdBySession(c)
+			log.Println("user id", userId)
+		}
+		return c.Next()
+	})
 	app.Get("/", home.HandlerHomePageView)
 	app.Get("/users", users.HandleUsersPageView)
 

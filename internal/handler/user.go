@@ -5,8 +5,8 @@ import (
 	"slices"
 	"strconv"
 
+	"github.com/Michael-Sjogren/gotempl/internal/middleware"
 	"github.com/Michael-Sjogren/gotempl/internal/model"
-	"github.com/Michael-Sjogren/gotempl/internal/session"
 	"github.com/Michael-Sjogren/gotempl/internal/views/components"
 	"github.com/Michael-Sjogren/gotempl/internal/views/pages"
 	"github.com/gofiber/fiber/v2"
@@ -14,7 +14,7 @@ import (
 
 type UserHandler struct {
 	UserModel      *model.UserRepo
-	SessionManager *session.SessionManager
+	SessionManager *middleware.SessionManager
 }
 
 func (h *UserHandler) HandleUsersPageView(c *fiber.Ctx) error {
@@ -42,7 +42,7 @@ func (h *UserHandler) HandleLogin(c *fiber.Ctx) error {
 	}
 
 	if len(errorList) == 0 {
-		_, _ = h.SessionManager.HandleCreateSession(c, user.Id)
+		_, _ = h.SessionManager.HandleGetCreateSession(c, user.Id)
 		log.Println("created session")
 	}
 	return Render(c, components.LoginForm(errorList))
